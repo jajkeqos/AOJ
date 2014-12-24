@@ -2,18 +2,11 @@
 // Timeを足す対民具
 //
 
-
-
-
 #include <bits/stdc++.h>
-#include <iostream>
-#include <queue>
 using namespace std;
 
-
-
 struct Point {
-int x,y;
+  int x,y;
   bool operator < ( const Point& p ) const {
     if( y != p.y ) return y < p.y;
     return x < p.x;
@@ -52,27 +45,39 @@ int main(void){
     cin >> d >> t >> x; //d:TeamID , t:Time , x:Point
     totalPoint[d] += x;
     Point tmp = {d,totalPoint[d]};
-    pq.push(tmp);
-
-    int teamID = pq.top().x;
-
+    //時間をいままでのに加える処理
+    int teamID;
     if(i == 0){
-
+      pq.push(tmp);
+      beforeTime = t;
     }else{
       //写った秒数を加える
+      teamID = pq.top().x;
       intervalTime = t - beforeTime;
       totalTime[teamID] += intervalTime;
+      cout << "i = " << i << " " <<  teamID << "'s Time += " << intervalTime << endl;
+      pq.push(tmp);
+      while(1){ //古い情報は取り除く
+        if(pq.top().y != totalPoint[pq.top().x] && pq.empty() == false){ pq.pop(); cout << "Poped ! " << endl;}
+        else break;
+      }
+      beforeTime = t;
     }
-    beforeTime = t;
+    teamID = d;
     cout << endl;
     cout << "Team: " << teamID << " Point: " << pq.top().y << " Time: " << totalTime[teamID];
   }
-  cout << endl;
-  
+
   intervalTime = L - beforeTime;
   int teamID = pq.top().x;
   totalTime[teamID] += intervalTime;
-
+  /*  デバッグ用
+     cout << endl << endl;
+     while(pq.empty() == false){
+     cout << "Team: " << pq.top().x << " Point: " << pq.top().y << " Time: " << totalTime[pq.top().x] << endl;
+     pq.pop();
+     }
+  */
   searchMax();
 
   return 0;
