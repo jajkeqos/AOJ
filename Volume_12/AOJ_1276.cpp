@@ -33,9 +33,10 @@ int main(){
     if(k == *pos){ //kが素数だった時
       cout << 0 << endl;
     }else{
-      int afterPrime = v[distance(v.begin(),pos)];
-      int beforePrime = v[distance(v.begin(),pos)-1];
-      cout << afterPrime - beforePrime << endl;
+      //int afterPrime = v[distance(v.begin(),pos)];
+      //int beforePrime = v[distance(v.begin(),pos)-1];
+      //cout << afterPrime - beforePrime << endl;
+      cout << *pos - *(--pos) << endl;
     }
   }
   return 0;
