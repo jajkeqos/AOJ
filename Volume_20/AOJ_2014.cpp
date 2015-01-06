@@ -1,46 +1,59 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <utility>
-#include <algorithm>
-#include <map>
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef pair<int,int> P;
+typedef long long ll;
 
 #define rep(i,n) for(int i=0;i<n;i++)
 #define pb push_back 
 #define inf INT_MAX/4 
+#define ALL(v) v.begin(),v.end()
 
-struct Farm{
-  string name;
-  double effect;
-  Farm(string name, double effect):name(name),effect(effect){}
-};
+static const int dx[] = {1,0,-1,0};
+static const int dy[] = {0,1,0,-1};
+int w, h;
+char area[51][51];
+bool white[51][51];
+bool black[51][51];
 
-bool operator < (const Farm& a, const Farm& b){
-  return tie(b.effect,a.name) < tie(a.effect,b.name);
+void dfs(int x, int y, bool isVisit[51][51]){
+  rep(i,4){
+    int nx = x + dx[i];
+    int ny = y + dy[i];
+    if(0 <= nx && nx < w && 0 <= ny && ny < h){
+      if(area[ny][nx] == '.' && !isVisit[ny][nx]){
+        isVisit[ny][nx] = true;
+        dfs(nx,ny,isVisit);
+      }
+    }
+  }
 }
 
 int main(void){
-  int n;
 
-  while(cin >> n, n){
-    vector<Farm> v;
-    while(n--){
-      string l;
-      int p, a, b, c, d, e, f, s, m;
-      cin >> l >> p >> a >> b >> c >> d >> e >> f >> s >> m;
-      //cout << l << p << a << b << c << d << e << f << s << m;
-      int income = (f*s) * m - p;
-      int time = a + b + c + (d + e) * m;
-      double effect = (double)income / time;
-      v.pb(Farm(l,effect));
+  while(cin >> w >> h, w||h){
+    fill((bool *)white,(bool *)white+51*51, false);
+    fill((bool *)black,(bool *)black+51*51, false);
+    // 入力
+    rep(i,h) cin >> area[i];
+    
+
+    rep(i,h) rep(j,w){
+      if(area[i][j] == 'W'){
+        dfs(j,i,white);
+      }else if(area[i][j] == 'B'){
+        dfs(j,i,black);
+      }
     }
-    sort(v.begin(), v.end());
-    rep(i,v.size()) cout << v[i].name << endl;
-    cout << "#" << endl;
+    int bl = 0, wh = 0;
+
+    rep(i,h) rep(j,w){
+      if(black[i][j] && !white[i][j]) bl++;
+      if(!black[i][j] && white[i][j]) wh++;
+    }
+    cout << bl << " " << wh << endl;
   }
+
+
   return 0;
 }
